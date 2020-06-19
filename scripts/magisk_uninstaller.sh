@@ -47,7 +47,7 @@ mv $CHROMEDIR $MAGISKBIN
 chmod -R 755 $MAGISKBIN
 
 check_data
-$DATA_DE || abort "! Cannot access /data, please uninstall with Magisk Manager"
+$DATA_UNENC || abort "! Cannot access /data, please uninstall with Magisk Manager"
 $BOOTMODE || recovery_actions
 run_migrations
 
@@ -140,8 +140,8 @@ esac
 ui_print "- Removing Magisk files"
 rm -rf \
 /cache/*magisk* /cache/unblock /data/*magisk* /data/cache/*magisk* /data/property/*magisk* \
-/data/Magisk.apk /data/busybox /data/custom_ramdisk_patch.sh /data/adb/*magisk* \
-/data/adb/post-fs-data.d /data/adb/service.d /data/adb/modules* $PERSISTDIR/magisk 2>/dev/null
+/data/Magisk.apk /data/busybox /data/custom_ramdisk_patch.sh /data/unencrypted/magisk/*magisk* \
+/data/unencrypted/magisk/post-fs-data.d /data/unencrypted/magisk/service.d /data/unencrypted/magisk/modules* $PERSISTDIR/magisk 2>/dev/null
 
 if [ -f /system/addon.d/99-magisk.sh ]; then
   mount -o rw,remount /system

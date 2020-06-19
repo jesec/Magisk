@@ -14,7 +14,7 @@ MAGISKTMP=/sbin/.magisk
 # Magisk BusyBox path
 BBPATH=$MAGISKTMP/busybox
 
-# /data/adb/modules will be bind mounted here
+# /data/unencrypted/magisk/modules will be bind mounted here
 $MAGISKTMP/modules
 
 # The configuration used in last installation
@@ -38,15 +38,15 @@ $MAGISKTMP/rootdir
 ```
 
 ### Paths in `/data`
-Some binaries and files should be stored on non-volatile storages in `/data`. In order to prevent detection, everything has to be stored somewhere safe and undetectable in `/data`. The folder `/data/adb` was chosen because of the following advantages:
+Some binaries and files should be stored on non-volatile storages in `/data`. In order to prevent detection, everything has to be stored somewhere safe and undetectable in `/data`. The folder `/data/unencrypted` was chosen because of the following advantages:
 
 - It is an existing folder on modern Android, so it cannot be used as an indication of the existence of Magisk.
 - The permission of the folder is by default `700`, owner as `root`, so non-root processes are unable to enter, read, write the folder in any possible way.
-- The folder is labeled with secontext `u:object_r:adb_data_file:s0`, and very few processes have the permission to do any interaction with that secontext.
-- The folder is located in *Device encrypted storage*, so it is accessible as soon as data is properly mounted in FBE (File-Based Encryption) devices.
+- The folder is labeled with secontext `u:object_r:unencrypted_data_file:s0`, and very few processes have the permission to do any interaction with that secontext.
+- The folder is located in *Unencrypted storage*, so it is accessible as soon as data is mounted in FBE (File-Based Encryption) devices.
 
 ```
-SECURE_DIR=/data/adb
+SECURE_DIR=/data/unencrypted/magisk
 
 # Folder storing general post-fs-data scripts
 $SECURE_DIR/post-fs-data.d

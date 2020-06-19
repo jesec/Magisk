@@ -1,10 +1,10 @@
 # Developer Guides
 
 ## Magisk Modules
-A Magisk module is a folder placed in `/data/adb/modules` with the structure below:
+A Magisk module is a folder placed in `/data/unencrypted/magisk/modules` with the structure below:
 
 ```
-/data/adb/modules
+/data/unencrypted/magisk/modules
 ├── .
 ├── .
 |
@@ -212,7 +212,7 @@ In Magisk, you can run boot scripts in 2 different modes: **post-fs-data** and *
 In Magisk, there are also 2 kinds of scripts: **general scripts** and **module scripts**.
 
 - General Scripts
-    - Placed in `/data/adb/post-fs-data.d` or `/data/adb/service.d`
+    - Placed in `/data/unencrypted/magisk/post-fs-data.d` or `/data/unencrypted/magisk/service.d`
     - Only executed if the script is executable (execution permissions, `chmod +x script.sh`)
     - Scripts in `post-fs-data.d` runs in post-fs-data mode, and scripts in `service.d` runs in late_start service mode.
     - Will still be executed when **Core-Only** mode is enabled.

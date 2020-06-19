@@ -520,25 +520,25 @@ api_level_arch_detect() {
 
 check_data() {
   DATA=false
-  DATA_DE=false
+  DATA_UNENC=false
   if grep ' /data ' /proc/mounts | grep -vq 'tmpfs'; then
     # Test if data is writable
     touch /data/.rw && rm /data/.rw && DATA=true
-    # Test if DE storage is writable
-    $DATA && [ -d /data/adb ] && touch /data/adb/.rw && rm /data/adb/.rw && DATA_DE=true
+    # Test if unencrypted storage is writable
+    $DATA && [ -d /data/unencrypted/magisk ] && touch /data/unencrypted/magisk/.rw && rm /data/unencrypted/magisk/.rw && DATA_UNENC=true
   fi
   $DATA && NVBASE=/data || NVBASE=/cache/data_adb
-  $DATA_DE && NVBASE=/data/adb
+  $DATA_UNENC && NVBASE=/data/unencrypted/magisk
   resolve_vars
 }
 
 find_manager_apk() {
-  [ -z $APK ] && APK=/data/adb/magisk.apk
+  [ -z $APK ] && APK=/data/unencrypted/magisk/magisk.apk
   [ -f $APK ] || APK=/data/magisk/magisk.apk
   [ -f $APK ] || APK=/data/app/com.topjohnwu.magisk*/*.apk
   if [ ! -f $APK ]; then
     DBAPK=`magisk --sqlite "SELECT value FROM strings WHERE key='requester'" 2>/dev/null | cut -d= -f2`
-    [ -z $DBAPK ] && DBAPK=`strings /data/adb/magisk.db | grep 5requester | cut -c11-`
+    [ -z $DBAPK ] && DBAPK=`strings /data/unencrypted/magisk/magisk.db | grep 5requester | cut -c11-`
     [ -z $DBAPK ] || APK=/data/user_de/*/$DBAPK/dyn/*.apk
     [ -f $APK ] || [ -z $DBAPK ] || APK=/data/app/$DBAPK*/*.apk
   fi
@@ -549,7 +549,7 @@ run_migrations() {
   local LOCSHA1
   local TARGET
   # Legacy app installation
-  local BACKUP=/data/adb/magisk/stock_boot*.gz
+  local BACKUP=/data/unencrypted/magisk/magisk/stock_boot*.gz
   if [ -f $BACKUP ]; then
     cp $BACKUP /data
     rm -f $BACKUP
@@ -567,7 +567,7 @@ run_migrations() {
   # Stock backups
   LOCSHA1=$SHA1
   for name in boot dtb dtbo dtbs; do
-    BACKUP=/data/adb/magisk/stock_${name}.img
+    BACKUP=/data/unencrypted/magisk/magisk/stock_${name}.img
     [ -f $BACKUP ] || continue
     if [ $name = 'boot' ]; then
       LOCSHA1=`$MAGISKBIN/magiskboot sha1 $BACKUP`
@@ -734,7 +734,7 @@ install_module() {
 [ -z $BOOTMODE ] && ps -A 2>/dev/null | grep zygote | grep -qv grep && BOOTMODE=true
 [ -z $BOOTMODE ] && BOOTMODE=false
 
-NVBASE=/data/adb
+NVBASE=/data/unencrypted/magisk
 TMPDIR=/dev/tmp
 
 # Bootsigner related stuff

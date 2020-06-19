@@ -20,7 +20,7 @@ class RootInit : Shell.Initializer() {
         val job = shell.newJob()
         if (Info.env.magiskVersionCode >= Const.Version.DYNAMIC_PATH) {
             job.add("export ASH_STANDALONE=1")
-                .add("[ -x /data/adb/magisk/busybox ] && exec /data/adb/magisk/busybox sh")
+                .add("[ -x /data/unencrypted/magisk/magisk/busybox ] && exec /data/unencrypted/magisk/magisk/busybox sh")
                 .add("MAGISKTMP=$(magisk --path)/.magisk")
         } else {
             job.add("export PATH=\"/sbin/.magisk/busybox:\$PATH\"")

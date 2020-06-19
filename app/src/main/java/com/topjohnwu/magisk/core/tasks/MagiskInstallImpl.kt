@@ -328,7 +328,7 @@ abstract class MagiskInstallImpl : FlashResultListener {
     }
 
     private fun postOTA(): Boolean {
-        val bootctl = SuFile("/data/adb/bootctl")
+        val bootctl = SuFile("/data/unencrypted/magisk/bootctl")
         try {
             withStreams(service.fetchBootctl().blockingGet().byteStream(), bootctl.suOutputStream()) {
                 input, out -> input.copyTo(out)
@@ -361,8 +361,8 @@ abstract class MagiskInstallImpl : FlashResultListener {
         findSecondaryImage() && extractZip() && patchBoot() && flashBoot() && postOTA()
 
     protected fun fixEnv(zip: File): Boolean {
-        installDir = SuFile("/data/adb/magisk")
-        Shell.su("rm -rf /data/adb/magisk/*").exec()
+        installDir = SuFile("/data/unencrypted/magisk/magisk")
+        Shell.su("rm -rf /data/unencrypted/magisk/magisk/*").exec()
         zipUri = zip.toUri()
         return extractZip() && Shell.su("fix_env").exec().isSuccess
     }

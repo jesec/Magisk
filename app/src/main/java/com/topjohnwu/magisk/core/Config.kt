@@ -178,7 +178,7 @@ object Config : PreferenceModel, DBConfig {
     }
 
     private fun parsePrefs(editor: SharedPreferences.Editor) = editor.apply {
-        val config = SuFile.open("/data/adb",
+        val config = SuFile.open("/data/unencrypted/magisk",
             Const.MANAGER_CONFIGS
         )
         if (config.exists()) runCatching {
@@ -238,7 +238,7 @@ object Config : PreferenceModel, DBConfig {
             "${context.filesDir.parent}/shared_prefs",
             "${context.packageName}_preferences.xml"
         )
-        Shell.su("cat $xml > /data/adb/${Const.MANAGER_CONFIGS}").exec()
+        Shell.su("cat $xml > /data/unencrypted/magisk/${Const.MANAGER_CONFIGS}").exec()
     }
 
 }

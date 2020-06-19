@@ -97,7 +97,7 @@ ln -s ./magisk /sbin/magiskhide
 mkdir -p /sbin/.magisk/busybox
 cp -af ./busybox /sbin/.magisk/busybox/busybox
 /sbin/.magisk/busybox/busybox --install -s /sbin/.magisk/busybox
-mkdir -p /data/adb/modules 2>/dev/null
-mkdir /data/adb/post-fs-data.d 2>/dev/null
-mkdir /data/adb/services.d 2>/dev/null
+mkdir -p /data/unencrypted/magisk/modules 2>/dev/null
+mkdir /data/unencrypted/magisk/post-fs-data.d 2>/dev/null
+mkdir /data/unencrypted/magisk/services.d 2>/dev/null
 /sbin/magisk --daemon

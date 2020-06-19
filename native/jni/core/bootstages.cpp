@@ -55,7 +55,7 @@ static bool magisk_env() {
 	sprintf(buf1, "%s/0/%s/install", APP_DATA_DIR, pkg.data());
 
 	// Alternative binaries paths
-	const char *alt_bin[] = { "/cache/data_adb/magisk", "/data/magisk", buf1 };
+	const char *alt_bin[] = { "/cache/data_adb/magisk", "/data/magisk", "/data/adb/magisk", buf1 };
 	for (auto alt : alt_bin) {
 		struct stat st;
 		if (lstat(alt, &st) == 0) {
@@ -72,9 +72,9 @@ static bool magisk_env() {
 
 	// Remove stuffs
 	rm_rf("/cache/data_adb");
-	rm_rf("/data/adb/modules/.core");
-	unlink("/data/adb/magisk.img");
-	unlink("/data/adb/magisk_merge.img");
+	rm_rf("/data/unencrypted/magisk/modules/.core");
+	unlink("/data/unencrypted/magisk/magisk.img");
+	unlink("/data/unencrypted/magisk/magisk_merge.img");
 	unlink("/data/magisk.img");
 	unlink("/data/magisk_merge.img");
 	unlink("/data/magisk_debug.log");
@@ -82,7 +82,7 @@ static bool magisk_env() {
 	sprintf(buf1, "%s/" MODULEMNT, MAGISKTMP.data());
 	xmkdir(buf1, 0755);
 
-	// Directories in /data/adb
+	// Directories in /data/unencrypted/magisk
 	xmkdir(DATABIN, 0755);
 	xmkdir(MODULEROOT, 0755);
 	xmkdir(SECURE_DIR "/post-fs-data.d", 0755);
@@ -286,16 +286,19 @@ void post_fs_data(int client) {
 	unlock_blocks();
 
 	if (access(SECURE_DIR, F_OK) != 0) {
-		if (SDK_INT < 24) {
-			// There is no FBE pre 7.0, we can directly create the folder without issues
-			xmkdir(SECURE_DIR, 0700);
-		} else {
-			/* If the folder is not automatically created by Android,
-			 * do NOT proceed further. Manual creation of the folder
-			 * will cause bootloops on FBE devices. */
-			LOGE(SECURE_DIR " is not present, abort...\n");
-			goto unblock_init;
+		if (access(UNENC_DIR, F_OK) != 0) {
+			if (SDK_INT < 24) {
+				// There is no FBE pre 7.0, we can directly create the folder without issues
+				xmkdir(UNENC_DIR, 0700);
+			} else {
+				/* If the folder is not automatically created by Android,
+					* do NOT proceed further. Manual creation of the folder
+					* will cause bootloops on FBE devices. */
+				LOGE(UNENC_DIR " is not present, abort...\n");
+				goto unblock_init;
+			}
 		}
+		xmkdir(SECURE_DIR, 0700);
 	}
 
 	if (!magisk_env()) {
@@ -350,8 +353,12 @@ void boot_complete(int client) {
 
 	/* It's safe to create the folder at this point if the system didn't create it
 	 * Magisk Manager should finish up the remaining environment setup */
-	if (access(SECURE_DIR, F_OK) != 0)
+	if (access(SECURE_DIR, F_OK) != 0) {
+		if (access(UNENC_DIR, F_OK) != 0) {
+			xmkdir(UNENC_DIR, 0700);
+		}
 		xmkdir(SECURE_DIR, 0700);
+	}
 
 	if (pfs_done)
 		auto_start_magiskhide();

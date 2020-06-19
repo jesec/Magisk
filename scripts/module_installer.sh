@@ -25,8 +25,8 @@ ZIPFILE=$3
 
 mount /data 2>/dev/null
 
-[ -f /data/adb/magisk/util_functions.sh ] || require_new_magisk
-. /data/adb/magisk/util_functions.sh
+[ -f /data/unencrypted/magisk/magisk/util_functions.sh ] || require_new_magisk
+. /data/unencrypted/magisk/magisk/util_functions.sh
 [ $MAGISK_VER_CODE -lt 20000 ] && require_new_magisk
 
 if [ $MAGISK_VER_CODE -ge 20400 ]; then
