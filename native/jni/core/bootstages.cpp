@@ -88,6 +88,9 @@ static bool magisk_env() {
 	xmkdir(SECURE_DIR "/post-fs-data.d", 0755);
 	xmkdir(SECURE_DIR "/service.d", 0755);
 
+	// Symlink OLD_DATABIN to DATABIN for compat
+	xsymlink(DATABIN, OLD_DATABIN);
+
 	LOGI("* Mounting mirrors");
 
 	parse_mnt("/proc/mounts", [&](mntent *me) {

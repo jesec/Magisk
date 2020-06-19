@@ -14,6 +14,8 @@
 #define MAGISKDB        SECURE_DIR "/magisk.db"
 #define MANAGERAPK      DATABIN "/magisk.apk"
 
+#define OLD_DATABIN     "/data/adb/magisk"
+
 // tmpfs paths
 extern std::string  MAGISKTMP;
 #define INTLROOT    ".magisk"
